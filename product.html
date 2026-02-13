@@ -3,20 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Products - Free Followers</title>
-    <link rel="stylesheet" href="styles/main.css">
+    <title>Product Details</title>
     <link rel="stylesheet" href="styles/product.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- HEADER -->
     <header class="header">
         <div class="container">
             <div class="nav">
-                <div class="logo">
-                    <h1><a href="index.html">Free Followers</a></h1>
-                </div>
+                <div class="logo"><h1>Free Followers</h1></div>
                 <div class="nav-links">
                     <a href="index.html#home">Home</a>
                     <a href="index.html#products">Products</a>
@@ -29,23 +25,12 @@
         </div>
     </header>
 
-    <!-- MAIN CONTENT -->
-    <main class="product-main">
-        <div class="container">
-            <div class="breadcrumb">
-                <a href="index.html#home">Home</a> > 
-                <a href="index.html#products">Products</a> > 
-                <span id="breadcrumb-product">All Products</span>
-            </div>
-
-            <!-- حاوية المنتجات -->
-            <div class="product-details" id="product-details">
-                <!-- سيتم تحميل جميع المنتجات بواسطة js/product.js -->
-            </div>
-        </div>
+    <main>
+        <section class="product-details" id="product-details">
+            <!-- Product details will appear here -->
+        </section>
     </main>
 
-    <!-- FOOTER -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
@@ -63,16 +48,120 @@
                 <div class="footer-section">
                     <h4>Contact Us</h4>
                     <p>Email: info@lna.qzz.io</p>
-                    <p>Phone: +13306407373</p>
+                    <p>Phone: +1(330)-643-7383</p>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 Free Followers. All rights reserved.</p>
+                <p>&copy; 2025 Lna Web. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <!-- JS -->
-    <script src="js/product.js"></script>
+    <script>
+    // ======== PRODUCTS DATA ========
+    const products = [
+        { id: 1, name: "100 Followers", price: 2.99, originalPrice: 3.99, rating: 4.5, reviews: 10, image: "statics/100.jpg" },
+        { id: 2, name: "500 Followers", price: 9.99, originalPrice: 12.99, rating: 4.8, reviews: 15, image: "statics/500.jpg" },
+        { id: 3, name: "1000 Followers", price: 18.99, originalPrice: 22.99, rating: 4.7, reviews: 20, image: "statics/1000.jpg" },
+        { id: 4, name: "Free 50 Followers", price: 0, originalPrice: 0, rating: 4.0, reviews: 5, image: "statics/free50.jpg", condition: "Share a link on Twitter" },
+        { id: 5, name: "Free 100 Followers", price: 0, originalPrice: 0, rating: 4.2, reviews: 8, image: "statics/free100.jpg", condition: "Post link on Facebook" },
+        { id: 6, name: "2000 Followers", price: 34.99, originalPrice: 40.99, rating: 4.9, reviews: 30, image: "statics/2000.jpg" },
+        { id: 7, name: "5000 Followers", price: 79.99, originalPrice: 89.99, rating: 5.0, reviews: 50, image: "statics/5000.jpg" },
+        { id: 8, name: "Free 200 Followers", price: 0, originalPrice: 0, rating: 4.3, reviews: 12, image: "statics/free200.jpg", condition: "Share a tweet with link" },
+        { id: 9, name: "Instagram Likes 100", price: 1.99, originalPrice: 2.99, rating: 4.4, reviews: 7, image: "statics/like100.jpg" },
+        { id: 10, name: "Instagram Likes 500", price: 8.99, originalPrice: 10.99, rating: 4.6, reviews: 14, image: "statics/like500.jpg" },
+        { id: 11, name: "Free 150 Likes", price: 0, originalPrice: 0, rating: 4.1, reviews: 9, image: "statics/free150.jpg", condition: "Share a post on Twitter or Facebook" },
+        { id: 12, name: "10000 Followers", price: 149.99, originalPrice: 170.99, rating: 5.0, reviews: 70, image: "statics/10000.jpg" }
+    ];
+
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    function generateStars(rating) {
+        const full = Math.floor(rating);
+        const half = rating % 1 !== 0;
+        let stars = '';
+        for (let i = 0; i < full; i++) stars += '<i class="fas fa-star"></i>';
+        if (half) stars += '<i class="fas fa-star-half-alt"></i>';
+        for (let i = 0; i < 5 - Math.ceil(rating); i++) stars += '<i class="far fa-star"></i>';
+        return stars;
+    }
+
+    function addToCart(productId) {
+        const product = products.find(p => p.id === productId);
+        if (!product) return;
+        const existing = cart.find(item => item.id === productId);
+        if (existing) existing.quantity += 1;
+        else cart.push({ id: product.id, name: product.name, price: product.price, image: product.image, quantity: 1 });
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        showNotification(product.price === 0 ? "Free product claimed!" : "Product added to cart!");
+    }
+
+    function updateCartCount() {
+        const cartCount = document.querySelector('.cart-count');
+        if (cartCount) {
+            const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = total;
+        }
+    }
+
+    function showNotification(msg) {
+        const n = document.createElement('div');
+        n.style.cssText = `
+            position: fixed; top: 100px; right: 20px;
+            background: #10b981; color: white;
+            padding: 1rem 1.5rem; border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1001; transform: translateX(100%);
+            transition: transform 0.3s ease;
+        `;
+        n.textContent = msg;
+        document.body.appendChild(n);
+        setTimeout(() => n.style.transform = 'translateX(0)', 100);
+        setTimeout(() => { n.style.transform = 'translateX(100%)'; setTimeout(() => document.body.removeChild(n), 300); }, 3000);
+    }
+
+    function loadProduct() {
+        const params = new URLSearchParams(window.location.search);
+        const id = parseInt(params.get('id'));
+        const product = products.find(p => p.id === id);
+        if (!product) {
+            document.getElementById('product-details').innerHTML = '<p>Product not found.</p>';
+            return;
+        }
+
+        const discount = product.price > 0 ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
+        const stars = generateStars(product.rating);
+        const conditionText = product.price === 0 && product.condition ? `<p class="condition">${product.condition}</p>` : "";
+
+        document.getElementById('product-details').innerHTML = `
+            <div class="product-card">
+                <img src="${product.image}" alt="${product.name}" class="product-image">
+                <div class="product-info">
+                    <h2 class="product-name">${product.name}</h2>
+                    <div class="product-price">
+                        <span class="current-price">${product.price === 0 ? "Free" : product.price + "TL"}</span>
+                        ${discount > 0 ? `<span class="original-price">${product.originalPrice}TL</span>` : ""}
+                    </div>
+                    <div class="product-rating">
+                        <div class="stars">${stars}</div>
+                        <span class="rating-text">${product.rating} (${product.reviews} Reviews)</span>
+                    </div>
+                    ${conditionText}
+                    <button class="add-to-cart" onclick="addToCart(${product.id})">
+                        <i class="fas fa-shopping-cart"></i> ${product.price === 0 ? "Claim Now" : "Add to Cart"}
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadProduct();
+        updateCartCount();
+        const cartIcon = document.querySelector('.cart-icon');
+        if (cartIcon) cartIcon.addEventListener('click', () => { if (cart.length>0) window.location.href='checkout.html'; else showNotification('Your cart is empty!'); });
+    });
+    </script>
 </body>
 </html>
