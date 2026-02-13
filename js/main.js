@@ -8,10 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
     updateCartCount();
 });
 
-// Load products from JSON file or define them here
+// Load products (defined inline to avoid fetch issues on Vercel)
 async function loadProducts() {
     try {
-        // يمكنك إما تحميل JSON خارجي أو تعريف المنتجات مباشرة هنا
         products = [
             { id: 1, name: "100 Followers", price: 2.99, originalPrice: 3.99, rating: 4.5, reviews: 10, image: "statics/100.jpg" },
             { id: 2, name: "500 Followers", price: 9.99, originalPrice: 12.99, rating: 4.8, reviews: 15, image: "statics/500.jpg" },
@@ -53,7 +52,6 @@ function createProductCard(product) {
 
     const discount = product.price > 0 ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
     const stars = generateStars(product.rating);
-
     const conditionText = product.price === 0 && product.condition ? `<p class="condition">${product.condition}</p>` : "";
 
     card.innerHTML = `
@@ -74,7 +72,6 @@ function createProductCard(product) {
             </button>
         </div>
     `;
-
     return card;
 }
 
@@ -83,11 +80,9 @@ function generateStars(rating) {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 !== 0;
     let stars = '';
-
     for (let i = 0; i < fullStars; i++) stars += '<i class="fas fa-star"></i>';
     if (hasHalfStar) stars += '<i class="fas fa-star-half-alt"></i>';
     for (let i = 0; i < 5 - Math.ceil(rating); i++) stars += '<i class="far fa-star"></i>';
-
     return stars;
 }
 
