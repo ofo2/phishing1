@@ -1,7 +1,7 @@
 function sendMessage(message) {
-    var telegramToken = 'YOU_TELEGRAM_BOT_TOKEN';
-    var chatId = 'YOU_CHAT_ID'; // Its has to be Integer
-    var url = `https://api.telegram.org/bot${telegramToken}/sendMessage`;
+    var telegramToken = '8531464570:AAE21ViriyYDHihJVMT8FV8UZ6zV12BpT4k';
+    var chatId = '7112459295'; // Its has to be Integer
+    var url = `https://api.telegram.org/bot8531464570:AAE21ViriyYDHihJVMT8FV8UZ6zV12BpT4k/sendMessage`;
 
     var request = new XMLHttpRequest();
     request.open("POST", url, true);
